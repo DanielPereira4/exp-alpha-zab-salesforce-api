@@ -1,0 +1,17 @@
+name: CI/CD MuleSoft App
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  use-shared-pipeline:
+    uses: your-org/mulesoft-ci-workflows/.github/workflows/deploy-mule-app.yml@main
+    with:
+      environment: 'Sandbox'
+      deploy: ${{ github.ref == 'refs/heads/main' }}
+    secrets:
+      ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+      ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}

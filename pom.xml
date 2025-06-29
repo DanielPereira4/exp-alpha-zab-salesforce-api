@@ -32,8 +32,8 @@
       <configuration>
         <deployment>
           <provider>cloudhub</provider>
-          <username>DMMPereiraOKR-Q2</username>
-          <password>Monteiro34397</password>
+          <username>${anypoint.username}</username>
+          <password>${anypoint.password}</password>
           <environment>Sandbox</environment>
           <applicationName>dmmp-exp-alpha-zab-salesforce-api</applicationName>
           <region>eu-central-1</region> <!-- Optional, change to your target region -->

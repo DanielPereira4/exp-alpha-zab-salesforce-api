@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mycompany</groupId>
-	<artifactId>exp-alpha-zab-salesforce-api</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>dmmp-exp-alpha-zab-salesforce-api</artifactId>
+	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
 
-	<name>exp-alpha-zab-salesforce-api</name>
+	<name>dmmp-exp-alpha-zab-salesforce-api</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,7 +30,7 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-					<classifier>mule-application</classifier>
+					<classifier>---- select project type ----</classifier>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -68,7 +68,7 @@
 		<repository>
 			<id>anypoint-exchange-v3</id>
 			<name>Anypoint Exchange</name>
-			<url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+			<url>https://maven.eu1.anypoint.mulesoft.com/api/v3/maven</url>
 			<layout>default</layout>
 		</repository>
 		<repository>

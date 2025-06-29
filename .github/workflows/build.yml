@@ -68,7 +68,7 @@ jobs:
         PASSWORD: ${{ secrets.ANYPOINT_PLATFORM_PASSWORD }}
       run: |
         artifactName=$(ls *.jar | head -1)
-        mvn mule:deploy \
+        mvn org.mule.tools.maven:mule-maven-plugin:4.3.0:deploy  \
           -Dmule.artifact="$artifactName" \
           -Danypoint.username="$USERNAME" \
           -Danypoint.password="$PASSWORD"

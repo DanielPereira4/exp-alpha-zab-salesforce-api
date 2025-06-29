@@ -1,4 +1,4 @@
-name: MuleSoft CI/CD - Build and Deploy to CloudHub (Correct Maven Setup)
+name: MuleSoft CI/CD - Build and Deploy to CloudHub (Working Maven Setup)
 
 on:
   push:
@@ -22,10 +22,8 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
 
-      - name: Set up Maven 3.8.8
-        uses: apache/maven-action@v3
-        with:
-          maven-version: '3.8.8'
+      - name: Verify Maven Version
+        run: mvn -version
 
       - name: Configure Maven settings.xml for Anypoint Exchange authentication
         run: |

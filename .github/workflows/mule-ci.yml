@@ -1,4 +1,4 @@
-name: MuleSoft CI/CD - Build and Deploy to CloudHub
+name: MuleSoft CI/CD - Build and Deploy to CloudHub (Hardcoded Env and App Name)
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout Source Code
         uses: actions/checkout@v3
 
       - name: Set up JDK 8
@@ -21,6 +21,23 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
+
+      - name: Configure Maven settings.xml for Anypoint Exchange
+        run: |
+          mkdir -p ~/.m2
+          cat <<EOF > ~/.m2/settings.xml
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <servers>
+              <server>
+                <id>anypoint-exchange-v3</id>
+                <username>${{ secrets.ANYPOINT_PLATFORM_USERNAME }}</username>
+                <password>${{ secrets.ANYPOINT_PLATFORM_PASSWORD }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
 
       - name: Cache Maven Dependencies
         uses: actions/cache@v3
@@ -32,14 +49,12 @@ jobs:
 
       - name: Build and Deploy to CloudHub
         env:
-          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
-          ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
-          CLOUDHUB_APP_NAME: ${{ secrets.CLOUDHUB_APP_NAME }}
+          anypoint.username: ${{ secrets.ANYPOINT_PLATFORM_USERNAME }}
+          anypoint.password: ${{ secrets.ANYPOINT_PLATFORM_PASSWORD }}
         run: |
           mvn clean deploy \
             -DskipTests \
             -Danypoint.username=$ANYPOINT_USERNAME \
             -Danypoint.password=$ANYPOINT_PASSWORD \
-            -Danypoint.environment=Sandbox
-            -Dmule.application.name=dmmp-exp-alpha-zab-salesforce-api
+            -Danypoint.environment=Sandbox \
+            -Dmule.application.name=exp-alpha-zab-salesforce-api

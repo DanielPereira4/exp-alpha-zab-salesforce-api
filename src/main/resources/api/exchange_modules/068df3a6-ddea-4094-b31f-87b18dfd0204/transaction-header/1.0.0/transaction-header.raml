@@ -1,0 +1,7 @@
+#%RAML 1.0 Trait
+  usage: Apply this trait to ensure API Consumers are sending a transacation id for end to end tracking of a transaction
+  headers: 
+      x-transaction-id?:
+        description: value in uuid formart used to track transaction
+        type: string
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$

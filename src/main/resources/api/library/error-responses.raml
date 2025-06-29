@@ -1,0 +1,27 @@
+#%RAML 1.0 Library
+types:
+  commonAPIError:
+    type: object
+    properties:
+      errorCode: string
+      message: string
+      details?: string
+
+traits:
+  errorResponses:
+    responses:
+      400:
+        description: bad request (invalid json, malformed request, missing mandatory values)
+        body:
+          application/json:
+            type: commonAPIError
+      404:
+        description: Not Found (Returned when server doesn't know the resource being invoked.)
+        body:
+          application/json:
+            type: commonAPIError
+      500:
+        description: 500 Internal server error, something went wrong while processing the message
+        body:
+          application/json:
+            type: commonAPIError

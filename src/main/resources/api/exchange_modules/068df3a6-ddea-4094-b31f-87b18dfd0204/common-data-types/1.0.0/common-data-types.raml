@@ -1,0 +1,44 @@
+#%RAML 1.0 Library
+
+usage: Used for common data types across all domains
+
+#
+# Commmon Data Types
+#
+
+types: 
+
+ #Common API Error Type
+  commonAPIError:
+    type: errorStructure
+    example: !include examples/error_BadRequest.json
+
+
+  errorStructure:
+    type: object
+    properties:
+      errorCode: 
+        type: string
+        required: true
+        example: "400:BAD_REQUEST"      
+        description: HTTP Status Code and explanation
+      errorMessage: 
+        type: string
+        required: true
+        example: "Bad Request sent to server."  
+        description: error Message
+      errorDescription: 
+        type: string
+        required: true
+        example: "The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications"  
+        description: "Details of the error."
+      errorDateTime: 
+        type: string
+        required: true
+        example: "2021-01-08T11:39:55+0100"  
+        description: "Date time when the issue occured."
+
+
+
+
+  

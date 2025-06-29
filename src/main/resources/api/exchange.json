@@ -1,0 +1,33 @@
+{
+  "dependencies": [
+    {
+      "version": "1.0.0",
+      "assetId": "transaction-header",
+      "groupId": "068df3a6-ddea-4094-b31f-87b18dfd0204",
+      "provided": false
+    },
+    {
+      "version": "1.0.0",
+      "assetId": "client-id-enforcement",
+      "groupId": "068df3a6-ddea-4094-b31f-87b18dfd0204",
+      "provided": false
+    },
+    {
+      "version": "1.0.0",
+      "assetId": "common-data-types",
+      "groupId": "068df3a6-ddea-4094-b31f-87b18dfd0204",
+      "provided": false
+    }
+  ],
+  "version": "1.0.0",
+  "descriptorVersion": "1.0.0",
+  "classifier": "raml",
+  "main": "exp-alpha-zab-salesforce-api.raml",
+  "assetId": "exp-alpha-zab-salesforce-api",
+  "groupId": "068df3a6-ddea-4094-b31f-87b18dfd0204",
+  "name": "exp-alpha-zab-salesforce-api",
+  "organizationId": "068df3a6-ddea-4094-b31f-87b18dfd0204",
+  "apiVersion": "v1",
+  "tags": [],
+  "originalFormatVersion": "1.0"
+}

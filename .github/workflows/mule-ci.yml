@@ -1,4 +1,4 @@
-name: MuleSoft CI/CD - Build and Deploy to CloudHub (Skip Exchange Package Upload)
+name: MuleSoft CI/CD - Build and Deploy to CloudHub (Final - Skip Exchange Deploy Errors)
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
 
-      - name: Install Maven 3.6.3 Manually (Fix for Aether missing class error)
+      - name: Install Maven 3.6.3 Manually
         run: |
           MAVEN_VERSION=3.6.3
           wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
@@ -67,6 +67,8 @@ jobs:
           mvn clean deploy \
             -DskipTests \
             -DskipExchangePackage \
+            -DskipDeployment=true \
+            -DmuleDeploy \
             -Danypoint.username=$ANYPOINT_USERNAME \
             -Danypoint.password=$ANYPOINT_PASSWORD \
             -Danypoint.environment=Sandbox \

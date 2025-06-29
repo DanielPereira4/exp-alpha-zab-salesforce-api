@@ -1,4 +1,4 @@
-name: MuleSoft CI/CD - Build and Deploy to CloudHub (Final - Skip Exchange Deploy Errors)
+name: MuleSoft CI/CD - Build and Deploy to CloudHub (Hardcoded App Name)
 
 on:
   push:
@@ -19,28 +19,21 @@ jobs:
       - name: Set up Java 8
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
           distribution: 'adopt'
+          java-version: '8'
 
       - name: Install Maven 3.6.3 Manually
         run: |
           MAVEN_VERSION=3.6.3
           wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
           tar xzf apache-maven-$MAVEN_VERSION-bin.tar.gz
-          export MAVEN_HOME=$PWD/apache-maven-$MAVEN_VERSION
-          echo "MAVEN_HOME=$MAVEN_HOME" >> $GITHUB_ENV
-          echo "$MAVEN_HOME/bin" >> $GITHUB_PATH
-
-      - name: Verify Maven Version
-        run: mvn -version
+          echo "$PWD/apache-maven-$MAVEN_VERSION/bin" >> $GITHUB_PATH
 
       - name: Configure Maven settings.xml for Anypoint Exchange authentication
         run: |
           mkdir -p ~/.m2
           cat <<EOF > ~/.m2/settings.xml
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+          <settings>
             <servers>
               <server>
                 <id>anypoint-exchange-v3</id>
@@ -66,10 +59,11 @@ jobs:
         run: |
           mvn clean deploy \
             -DskipTests \
+            -DmuleDeploy \
             -DskipExchangePackage \
             -DskipDeployment=true \
-            -DmuleDeploy \
             -Danypoint.username=$ANYPOINT_USERNAME \
             -Danypoint.password=$ANYPOINT_PASSWORD \
             -Danypoint.environment=Sandbox \
-            -Dmule.application.name=exp-alpha-zab-salesforce-api
+            -Dmule.application.name=dmmp-exp-alpha-zab-salesforce-api \
+            -DoverwriteDeployment=true

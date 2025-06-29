@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,21 +27,6 @@ jobs:
         distribution: 'zulu'
         java-version: 8
 
-    - name: Configure Maven settings for Anypoint
-      run: |
-        mkdir -p ~/.m2
-        cat > ~/.m2/settings.xml <<EOF
-        <settings>
-          <servers>
-            <server>
-              <id>anypoint-exchange-v3</id>
-              <username>${{ secrets.anypoint_platform_username }}</username>
-              <password>${{ secrets.anypoint_platform_password }}</password>
-            </server>
-          </servers>
-        </settings>
-        EOF
-
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
@@ -57,11 +42,11 @@ jobs:
       with:
         name: artifacts
         path: target/*.jar
-
+        
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    steps:
+    steps:    
     - name: Checkout this repo
       uses: actions/checkout@v3
 
@@ -73,32 +58,16 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Configure Maven settings for Anypoint
-      run: |
-        mkdir -p ~/.m2
-        cat > ~/.m2/settings.xml <<EOF
-        <settings>
-          <servers>
-            <server>
-              <id>anypoint-exchange-v3</id>
-              <username>${{ secrets.anypoint_platform_username }}</username>
-              <password>${{ secrets.anypoint_platform_password }}</password>
-            </server>
-          </servers>
-        </settings>
-        EOF
-
     - uses: actions/download-artifact@v4
       with:
         name: artifacts
 
-    - name: Deploy to Anypoint Platform
+    - name: Deploy to Sandbox
       env:
-        ANYPOINT_USERNAME: ${{ secrets.anypoint_platform_username }}
-        ANYPOINT_PASSWORD: ${{ secrets.anypoint_platform_password }}
+        USERNAME: ${{ secrets.anypoint_platform_username }}
+        PASSWORD: ${{ secrets.anypoint_platform_password }}
       run: |
         artifactName=$(ls *.jar | head -1)
-        mvn deploy -DmuleDeploy \
-         -Dmule.artifact="$artifactName" \
-         -Danypoint.username="$ANYPOINT_USERNAME" \
-         -Danypoint.password="$ANYPOINT_PASSWORD"
+        mvn mule:deploy -Dmule.artifact="$artifactName" \
+          -Danypoint.username="$USERNAME" \
+          -Danypoint.password="$PASSWORD"

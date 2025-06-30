@@ -45,16 +45,3 @@ target/
 .mule/
 .DS_Store
 velocity.log
-
-# Ignore logs
-*.log
-
-# Ignore MUnit test output
-surefire-reports/
-
-# Ignore IntelliJ IDEA files (if you or others use IntelliJ)
-.idea/
-*.iml
-
-# Ignore OS-specific
-Thumbs.db

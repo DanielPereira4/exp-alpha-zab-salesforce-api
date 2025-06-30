@@ -1,3 +1,10 @@
+name: CI/CD - MuleSoft CloudHub EU1 (Build and Deploy Multi-Job)
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest

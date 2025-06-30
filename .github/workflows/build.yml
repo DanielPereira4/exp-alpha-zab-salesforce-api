@@ -1,61 +1,76 @@
-name: CI/CD - MuleSoft CloudHub EU1 (Build and Deploy)
+name: Build and Deploy to Sandbox
 
 on:
   push:
-    branches:
-      - main
-
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+    - name: Checkout this repo
+      uses: actions/checkout@v3
 
-    - name: Set up Java and Maven
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Set up JDK 1.8
       uses: actions/setup-java@v3
       with:
-        distribution: 'temurin'
-        java-version: '11'
-        cache: maven
+        distribution: 'zulu'
+        java-version: 8
 
-    - name: Build Mule Application
-      run: mvn clean package -Pcloudhub-deploy -DmuleDeploy
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
 
-    - name: Debug - List Target Folder Contents
-      run: ls -la target/
+    - name: Stamp artifact file name with commit hash
+      run: |
+        artifactName1=$(ls target/*.jar | head -1)
+        commitHash=$(git rev-parse --short "$GITHUB_SHA")
+        artifactName2=$(ls target/*.jar | head -1 | sed "s/.jar/-$commitHash.jar/g")
+        mv $artifactName1 $artifactName2
 
-    - name: Upload Mule App Artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: mule-app
-        path: target/*.zip
-
+        name: artifacts
+        path: target/*.jar
+        
   deploy:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
+    steps:    
+    - name: Checkout this repo
+      uses: actions/checkout@v3
 
-    steps:
-    - name: Download Mule App Artifact
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Download artifact
       uses: actions/download-artifact@v4
       with:
-        name: mule-app
-        path: target/
+        name: artifacts
 
-    - name: Set up Java and Maven
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '11'
-        cache: maven
-
-    - name: Debug - List Target Folder After Download
-      run: ls -la target/
-
-    - name: Deploy to CloudHub EU1 via Maven
+    - name: Deploy to Sandbox (CloudHub EU1)
       env:
-        ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
-        ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
-        ANYPOINT_ENV: ${{ secrets.ANYPOINT_ENV }}
-      run: mvn mule:deploy -Pcloudhub-deploy
+        USERNAME: ${{ secrets.anypoint_platform_username }}
+        PASSWORD: ${{ secrets.anypoint_platform_password }}
+      run: |
+        artifactName=$(ls *.jar | head -1)
+        mvn deploy -DmuleDeploy \
+         -Dmule.artifact=$artifactName \
+         -Dcloudhub.region=eu1 \
+         -Danypoint.username="$USERNAME" \
+         -Danypoint.password="$PASSWORD"

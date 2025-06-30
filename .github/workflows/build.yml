@@ -1,4 +1,4 @@
-name: CI/CD - MuleSoft Deployment to CloudHub EU1 (CLI v4 2025)
+name: CI/CD - MuleSoft CloudHub EU1 Deployment (Using Connected App)
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout source code
       uses: actions/checkout@v4
 
     - name: Set up Java 11
@@ -25,7 +25,7 @@ jobs:
     - name: Install Anypoint CLI v4
       run: npm install -g anypoint-cli-v4
 
-    - name: Deploy to CloudHub EU1 using JSON Config
+    - name: Deploy Mule App to CloudHub EU1
       env:
         ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
         ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}

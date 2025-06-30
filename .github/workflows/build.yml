@@ -1,4 +1,4 @@
-name: CI/CD - MuleSoft CloudHub EU1 (Build and Deploy Multi-Job)
+name: CI/CD - MuleSoft CloudHub EU1 (Multi-Job with Flexible Artifact Upload)
 
 on:
   push:
@@ -22,11 +22,14 @@ jobs:
     - name: Build Mule Application
       run: mvn clean package -DmuleDeploy
 
-    - name: Upload Mule App Artifact
+    - name: Debug - List Target Directory Contents
+      run: ls -la target/
+
+    - name: Upload All Mule App ZIPs in target/
       uses: actions/upload-artifact@v4
       with:
         name: mule-app
-        path: target/ci-cd-test-1.0.0-SNAPSHOT.zip
+        path: target/*.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -38,6 +41,9 @@ jobs:
       with:
         name: mule-app
         path: target/
+
+    - name: Debug - Confirm Downloaded Artifacts
+      run: ls -la target/
 
     - name: Set up Java 11
       uses: actions/setup-java@v3

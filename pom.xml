@@ -91,7 +91,6 @@
                                 <phase>package</phase>
                                 <goals>
                                     <goal>package</goal>
-                                    <goal>deploy</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -110,4 +109,3 @@
     </profiles>
 
 </project>
-

@@ -1,4 +1,4 @@
-name: CI/CD - MuleSoft CloudHub EU1 Deployment with JSON Config
+name: CI/CD - MuleSoft Deployment with JSON Config
 
 on:
   push:
@@ -19,18 +19,20 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
 
-    - name: Build Mule App (Maven Package)
+    - name: Build Mule Application
       run: mvn clean package -DmuleDeploy
 
     - name: Install Anypoint CLI v4
       run: npm install -g anypoint-cli-v4
 
+    # ✅ AUTHENTICATION STEP — Required!
     - name: Authenticate with Anypoint Platform
       run: |
         anypoint-cli-v4 config set client_id ${{ secrets.ANYPOINT_CLIENT_ID }}
         anypoint-cli-v4 config set client_secret ${{ secrets.ANYPOINT_CLIENT_SECRET }}
 
-    - name: Deploy Mule App using JSON Deployment Config
+    # ✅ Deploy Step using JSON Descriptor
+    - name: Deploy to CloudHub EU1 using JSON Config
       run: |
         echo '{
           "applicationName": "ci-cd-test",

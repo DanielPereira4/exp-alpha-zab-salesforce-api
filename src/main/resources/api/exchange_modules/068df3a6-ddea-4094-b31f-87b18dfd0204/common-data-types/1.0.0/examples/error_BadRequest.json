@@ -1,6 +1,0 @@
-{
-  "errorCode": "400:BAD_REQUEST",
-  "errorMessage": "Bad Request sent to server.",
-  "errorDescription": "The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.",
-  "errorDateTime": "2021-01-08T11:39:55+0100"
-}

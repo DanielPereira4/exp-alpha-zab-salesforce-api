@@ -25,21 +25,6 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.2.0</version>
             </plugin>
-            <plugin>
-                <groupId>org.mule.tools.maven</groupId>
-                <artifactId>mule-maven-plugin</artifactId>
-                <version>${mule.maven.plugin.version}</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>package-mule-application</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -99,6 +84,17 @@
                         <groupId>org.mule.tools.maven</groupId>
                         <artifactId>mule-maven-plugin</artifactId>
                         <version>${mule.maven.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>package-mule-application</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>package</goal>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                         <configuration>
                             <cloudHubDeployment>
                                 <applicationName>ci-cd-test</applicationName>
@@ -114,3 +110,4 @@
     </profiles>
 
 </project>
+

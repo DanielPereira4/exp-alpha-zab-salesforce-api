@@ -1,4 +1,4 @@
-name: CI/CD - MuleSoft CloudHub EU1 (Multi-Job with Flexible Artifact Upload)
+name: CI/CD - MuleSoft CloudHub EU1 (Build and Deploy Separate Jobs)
 
 on:
   push:
@@ -19,13 +19,13 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
 
-    - name: Build Mule Application
-      run: mvn clean package -DmuleDeploy
+    - name: Build Mule Application (with deploy profile for ZIP generation)
+      run: mvn clean package -Pcloudhub-deploy -DmuleDeploy
 
-    - name: Debug - List Target Directory Contents
+    - name: Debug - List target folder contents
       run: ls -la target/
 
-    - name: Upload All Mule App ZIPs in target/
+    - name: Upload Mule App Artifact
       uses: actions/upload-artifact@v4
       with:
         name: mule-app
@@ -41,9 +41,6 @@ jobs:
       with:
         name: mule-app
         path: target/
-
-    - name: Debug - Confirm Downloaded Artifacts
-      run: ls -la target/
 
     - name: Set up Java 11
       uses: actions/setup-java@v3

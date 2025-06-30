@@ -1,4 +1,4 @@
-name: CI/CD - MuleSoft CloudHub EU1 Deployment (Using Connected App)
+name: CI/CD - MuleSoft CloudHub EU1 Deployment (CLI v4 with Auth Flags)
 
 on:
   push:
@@ -10,25 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source code
+    # Step 1: Checkout source code
+    - name: Checkout repository
       uses: actions/checkout@v4
 
+    # Step 2: Set up Java 11 (required for Mule 4.x builds)
     - name: Set up Java 11
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '11'
 
+    # Step 3: Build Mule App (Creates target/ci-cd-test-1.0.0-SNAPSHOT.zip)
     - name: Build Mule Application
       run: mvn clean package -DmuleDeploy
 
+    # Step 4: Install Anypoint CLI v4
     - name: Install Anypoint CLI v4
       run: npm install -g anypoint-cli-v4
 
-    - name: Deploy Mule App to CloudHub EU1
-      env:
-        ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
-        ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
+    # Step 5: Deploy to CloudHub EU1 using CLI Flags for Auth
+    - name: Deploy Mule App to CloudHub EU1 (Using CLI Auth Flags)
       run: |
         echo '{
           "applicationName": "ci-cd-test",
@@ -39,4 +41,4 @@ jobs:
           "workerType": "MICRO"
         }' > deploy-config.json
 
-        anypoint-cli-v4 runtime-mgr cloudhub-application deploy --deploymentFile deploy-config.json
+        anypoint-cli-v4 --client-id "${{ secrets.ANYPOINT_CLIENT_ID }}" --client-secret "${{ secrets.ANYPOINT_CLIENT_SECRET }}" runtime-mgr cloudhub-application deploy --deploymentFile deploy-config.json

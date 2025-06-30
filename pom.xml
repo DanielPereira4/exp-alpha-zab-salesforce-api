@@ -75,4 +75,32 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<profiles>
+		<profile>
+			<id>cloudhub-deploy</id>
+			<properties>
+				<anypoint.platform.client_id>${env.ANYPOINT_CLIENT_ID}</anypoint.platform.client_id>
+				<anypoint.platform.client_secret>${env.ANYPOINT_CLIENT_SECRET}</anypoint.platform.client_secret>
+				<anypoint.platform.environment>${env.ANYPOINT_ENV}</anypoint.platform.environment>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.mule.tools.maven</groupId>
+						<artifactId>mule-maven-plugin</artifactId>
+						<version>${mule.maven.plugin.version}</version>
+						<configuration>
+							<cloudHubDeployment>
+								<applicationName>ci-cd-test</applicationName>
+								<region>eu1</region>
+								<workers>1</workers>
+								<workerType>MICRO</workerType>
+							</cloudHubDeployment>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>

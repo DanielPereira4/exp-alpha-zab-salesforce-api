@@ -1,4 +1,4 @@
-name: CI/CD - MuleSoft CloudHub EU1 (Build and Deploy Separate Jobs)
+name: CI/CD - MuleSoft CloudHub EU1 (Build and Deploy)
 
 on:
   push:
@@ -13,16 +13,17 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Set up Java 11
+    - name: Set up Java and Maven
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '11'
+        cache: maven
 
-    - name: Build Mule Application (with deploy profile for ZIP generation)
+    - name: Build Mule Application
       run: mvn clean package -Pcloudhub-deploy -DmuleDeploy
 
-    - name: Debug - List target folder contents
+    - name: Debug - List Target Folder Contents
       run: ls -la target/
 
     - name: Upload Mule App Artifact
@@ -42,11 +43,15 @@ jobs:
         name: mule-app
         path: target/
 
-    - name: Set up Java 11
+    - name: Set up Java and Maven
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '11'
+        cache: maven
+
+    - name: Debug - List Target Folder After Download
+      run: ls -la target/
 
     - name: Deploy to CloudHub EU1 via Maven
       env:
